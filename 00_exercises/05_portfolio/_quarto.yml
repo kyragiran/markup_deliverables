@@ -1,0 +1,21 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  page-navigation: false
+  navbar:
+    right:
+      - text: "About"
+        file: index.qmd
+      - text: "CV"
+        href: kyra giran_cv_2024.pdf 
+      - text: "Publications"
+        file: publications.qmd
+  page-footer:
+    center: "© Copyright 2025 Kyra Giran"
+
+format:
+  html:
+    theme: yeti
+    css: styles.css
