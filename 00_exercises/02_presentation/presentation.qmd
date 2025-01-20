@@ -1,0 +1,26 @@
+---
+title: "Presentation"
+author: "Kyra Giran"
+editor: visual
+format:
+  revealjs:
+    transition: convex
+    transition-speed: slow
+    height: 900
+    width: 1600
+    slide-number: c/t #< collapsed/total
+---
+
+## My favourite equation {background-color="pink"}
+
+$$
+    SD = \sqrt{\frac{\sum_{i=1}^{n}{(x_i - \bar{x})^2}}{n-1}}
+    $$
+
+------------------------------------------------------------------------
+
+## Fun fact about me
+
+### **I eat the whole apple (the core included)**
+
+![](C:/Users/giran/Downloads/alma.jpeg){fig-align="center"}

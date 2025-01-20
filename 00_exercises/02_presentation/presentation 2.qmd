@@ -1,0 +1,105 @@
+---
+title: "Quarto Presentation"
+author: "Kyra Giran"
+date: "`r Sys.Date()`"
+format: revealjs
+bibliography: references.bib
+---
+
+## Slide 1: Logo
+```{r}
+setwd("C:/Users/giran/OneDrive/Dokumentumok/UU MSBBSS/Markup-course")
+
+```
+
+
+
+![](Versie1-eternos-logo.jpg){width="20%"}
+
+## Slide 2: Centered Figure
+
+::: center
+![](Képernyőkép 2024-12-10 170031.png){width="50%"}
+:::
+
+## Slide 3: Interactive Table
+
+```{r}
+library(DT)
+datatable(mtcars)
+```
+
+## Slide 4: Animated Figure
+
+```{r}
+library(ggplot2)
+
+ggplot(mtcars, aes(mpg, wt, color = factor(cyl))) +
+  geom_point(size = 3) +
+  theme_minimal()
+
+
+
+```
+
+## Slide 5: Two-Column Layout
+
+::: columns
+::: {.column width="50%"}
+-   Column 1 Content
+:::
+
+::: {.column width="50%"}
+-   Column 2 Content
+:::
+:::
+
+## Slide 6: Multi-Row Equation
+
+\[
+
+```{=tex}
+\begin{aligned}
+E &= mc^2 \\
+F &= ma
+\end{aligned}
+```
+\]
+
+## Slide 7: Citation and References
+
+According to Squire (2002), the neuropsychology of memory plays a crucial role in understanding learning mechanisms.
+
+## References
+
+::: {#refs}
+:::
+
+
+## Slide 8: R-Code (Displayed, Not Executed)
+
+``` r
+# Example of code
+summary(mtcars)
+```
+
+## Slide 9: Cached and Labeled Code (Displayed but Not Executed)
+
+```## Slide 9: Cached and Labeled Code (Displayed but Not Executed)
+
+```{r, cache=TRUE, label="plot_generation", eval=FALSE}
+library(ggplot2)
+ggplot(mtcars, aes(mpg, wt)) + 
+  geom_point() +
+  theme_minimal()
+
+```
+
+## Slide 10: Executed R-Code (Not Displayed)
+
+```{r echo=FALSE}
+library(ggplot2)
+ggplot(mtcars, aes(mpg, wt)) + geom_point()
+```
+
+
