@@ -1,7 +1,10 @@
-# Markup languages and reproducible programming in statistics
+Links to the deliverables that have them:
 
-Deliverables for Markup languages and reproducible programming in statistics (202000010).
+Latex exercise: https://www.overleaf.com/read/jyjmntkrqrrh#d37a28
 
-Use this template to create your own repository, fill the contents of the repo with exercises and deliverables, then download the zip archive to hand in.
+Personal website: https://kyragiran.github.io/developer-portofolio/
 
+Reproducible manuscript: https://www.overleaf.com/read/cgtdhqtfwhxf#b725c9
+
+Shiny app:  https://kyra-giran.shinyapps.io/first-app/
 
