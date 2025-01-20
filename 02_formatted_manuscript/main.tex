@@ -1,0 +1,179 @@
+\documentclass[10pt, a4paper]{article}
+
+% Title Page
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[backend=biber, style=apa]{biblatex}
+\usepackage{hyperref}
+\usepackage[a4paper, portrait, tmargin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{url}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{adjustbox}
+
+\addbibresource{thesis.bib}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace{5cm}
+    \LARGE\textbf{Evaluating Variational Autoencoders for Missing Data: A Focus on Inference}
+    \\
+    \vspace{1.5cm}
+    \large Research Report
+    \\
+    \vfill
+    \large Student: Kyra Girán
+    \\
+    \large Program: Methodology \& Statistics for the Behavioural, Biomedical and Social Sciences
+    \\
+    \large Supervisors: Dr. G. Vink, MSc. H. Oberman, MSc. T. Volker
+    \\
+    \large Word count: 2493
+    \\
+    \large FETC Case Number: 24-2067
+    \\
+    \vfill
+    \large Date: \today
+    \\
+    \large Utrecht University
+\end{titlepage}
+
+\newpage
+
+\section{Introduction}
+
+Missing data is a widespread problem and challenge in research across disciplines. If not handled carefully, it may lead to a biased point estimate of parameters, affect statistical inferences, and, consequently, makes the research unreliable \parencite{vanBuuren2018}. 
+Traditional methods, such as listwise deletion or mean imputation, often don’t capture the full variability in the data, oversimplifying analyses, and resulting in distorted findings \parencite{SchaferGraham2002}.
+
+Multiple imputation (MI) is a robust alternative to ad hoc methods where the missingness problem is separated from the analysis by first filling in multiple plausible values for every missing datum and subsequently analyzing these multiple imputed datasets. The imputation step is performed by defining some imputation model based on the observed data, the assumed nature of the missing data and the substantive model of interest. When these models are correctly defined, multiple imputation is known to capture all the necessary variance components of the model estimation given the incomplete data, leading to valid inferences for the analysis problem at hand.  
+
+It is important to realize that multiple imputations were originally designed as a substantive model-based approach to incomplete data analysis. Multiple imputations are generated with some analysis model in mind, and the resulting multiply imputed model estimates are combined into a single inference that considers both the variability within the model and the variability between the imputed models \parencite{Rubin1987,vanBuuren2018}.  
+
+However, MI performance may decrease when the analysis model is unknown or computationally complex, a common issue in machine learning workflows. After all, the imputation model and the analysis model may not be compatible or congenial \parencite{Meng 1994}. In such cases, an imputation model may not sufficiently reflect the nature of the data requiring alternative approaches that better capture complex patterns. 
+
+Variational Autoencoders (VAEs; \parencite{KingmaWelling 2013}) seem to be a class of models that are promising in modeling complex data structures, without the need for strong assumptions for the distribution or nature of the data.  
+
+VAEs, that are generative models, work by learning the complex data structure and patterns. Therefore, they can approximate the original dataset without requiring strong assumptions about the distribution of the data in comparison to MI \parencite{Qui 2020}.  
+
+While VAEs have demonstrated great performance in prediction, their flexibility makes them suitable for missing data imputation as well. By running the VAE framework in parallel multiple plausible imputations can be generated. This makes them able to be incorporated into a multiple imputation pipeline. However, an important question remains: do VAEs, as an imputation model, adequately capture all the necessary variance components associated with the missing data problem? This question is explored in the thesis, as addressing it will give more information about the reliability of VAEs for a robust statistical inference. 
+
+This research report explores the challenges of missing data in greater detail, especially how VAEs compare to traditional methods like MI and single imputation. The research report gives more information about the theoretical background of VAEs and how they solve missing data problems. I’ll also try to uncover the statistical properties of VAEs in comparison to state-of-the-art methods such as Predictive Mean Matching. 
+
+\section{The Challenge of Missing Data}
+
+With incomplete data, many aspects of statistical analyses become complicated. Missing data can distort relationships between variables and increase mathematical complexity \parencite{LittleRubin2019}. Researchers must either integrate the missingness into the analysis or use imputation methods to handle missing values separately. While ad hoc methods like mean imputation or listwise deletion simplify data handling, they disregard the inherent variability, leading to biased parameter estimates and artificially small confidence intervals \parencite{Enders2017}.
+
+A more reliable alternative is multiple imputation, which generates multiple plausible datasets, analyzes them separately, and pools the results to provide statistically valid inferences \parencite{Rubin1987}. The flexibility of MI allows for modeling missingness under different mechanisms, including Missing Completely at Random (MCAR), Missing at Random (MAR), and Missing Not at Random (MNAR), each requiring specific assumptions and handling approaches \parencite{Nakagawa2015}.
+
+While MI is theoretically sound, it can be computationally intensive, particularly when dealing with high-dimensional data. Additionally, MI requires a well-specified imputation model, which may not always align with the analysis model \parencite{Meng1994}. These limitations motivate the exploration of alternative methods like VAEs.
+
+The pattern of missing data can occur in several ways, such as Missing Completely at Random (MCAR), Missing at Random (MAR), and Missing Not at Random (MNAR), each posing specific problems for the process of data analysis \parencite{Michael 2020, Rubin 2020}.  
+
+Variational Autoencoders (VAEs; \parencite{Kingma 2013}) seem to be a class of models that are promising in modeling complex data structures, without the need for strong assumptions for the distribution or nature of the data.  
+
+VAEs, that are generative models, work by learning the complex data structure and patterns. Therefore, they can approximate the original dataset without requiring strong assumptions about the distribution of the data in comparison to MI \parencite{Qui 2020}.  
+
+While VAEs have demonstrated great performance in prediction, their flexibility makes them suitable for missing data imputation as well. By running the VAE framework in parallel multiple plausible imputations can be generated. This makes them able to be incorporated into a multiple imputation pipeline. However, an important question remains: do VAEs, as an imputation model, adequately capture all the necessary variance components associated with the missing data problem? This question is explored in the thesis, as addressing it will give more information about the reliability of VAEs for a robust statistical inference.  
+
+\section{Advances in Imputation: Variational Autoencoders}
+
+An emerging machine learning method, Variational Autoencoders (VAEs) are able to model complicated data distributions, which makes them unique among these methods. VAEs compress and reconstruct data while capturing the underlying structure and uncertainties.  
+
+VAEs are generative models that work by learning the complex data structure and patterns. Therefore, they can approximate the original dataset without requiring strong assumptions about the distribution of the data in comparison to MI \parencite{Qui 2020}.  
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{Képernyőkép 2024-12-10 170031.png}
+    \caption{Figure 1 by Kurtis Pykes - Workflow of VAEs}
+    \label{fig:enter-label}
+\end{figure}
+
+The diagram shows the workflow of the VAEs. The process begins with the input data, x. The original 
+dataset goes through the encoder, a neural network. There it is compressed into a lower dimensional  representation called the latent space. The latent space models the probabilistic distribution for each data point \parencite{(Matheus & Krohling, 2024)}.
+
+This distribution is described by two parameters: the mean and variance. These parameters define a Gaussian distribution for the latent representation, enabling the model to incorporate uncertainty. 
+
+To create a specific representation of the data in the latent space the model selects a value. This is the latent variable z. Z is sampled from the Gaussian distribution. Directly sampling this value in a traditional method would interfere with the training process. Therefore, the VAEs use the reparameterization trick that ensures that the process is smooth and lets the model learn effectively. 
+
+Once z as the latent variable is determined, it goes to the decoder which is another neural network. The decoder uses z to recreate the original input data as accurately as possible. Essentially, based on the compressed data representation in the latent space the decoder learns to estimate how the original input data would look like. The VAEs produce an output that tries to closely match the original data while still allowing the model to handle new examples effectively. VAEs are really powerful tools for capturing patterns in complex data.  \parencite{Kingma & Welling, 2021}.
+
+In the training of the VAEs there is a loss function that has two major aims. One is reconstruction loss, which measures how closely the output resembles the original input. Secondly, the Kuller-Leibler divergence which regularizes the latent space. It conforms the learned distribution of the latent variables to a standard normal distribution. It keeps the latent space well-structured, prevents the model from overfitting and allows smooth sampling. These two mechanisms make sure that the VAE is both accurate in reconstruction and flexible in capturing patterns \parencite{Aspreti & Trentin, 2020}.
+
+This makes it possible for VAEs to capture complex dependencies and latent structures in data and hence outperform traditional imputation methods in high dimensional and nonlinear contexts  \parencite{McCoy et al., 2018; Ma et al., 2023 }.
+
+\section{Comparative Evaluations of Imputation Methods}
+
+Research consistently shows that VAEs outdo traditional imputation methods, such as mean imputation and PCA-based imputation, in terms of prediction tasks and performance. This advantage is especially true for datasets that come with a complex structure and a high proportion of missingness. Studies have shown VAEs in comparison to traditional methods that work more effectively on complex tasks, such as traffic forecasting and clustering single-cell mutation data \parencite{Yu et al. 2023, McCoy et al. 2018}.
+These findings show the ability of VAEs to not only reconstruct missing values effectively but also capture nonlinear relationships in data that traditional methods often fail to address. However, potential limitations should also be mentioned alongside the strengths of VAEs. In case of missing data values that deviate significantly from the mean VAEs might underestimate uncertainty. This can lead to overconfident imputations and biased inferences. Also, VAEs can be sensitive to model misspecification. The imputation quality may be worse if the assumed data distribution or model structure deviates from the actual characteristics of the dataset \parencite{Roskams-Hieter & Wade, 2023}.
+
+Beyond predictive performance, it is also important to evaluate imputation techniques beyond their ability to predict missing values and focus on their ability to support reliable inferences. According to van Buuren (2018), prediction-focused imputation techniques might not provide sufficient support for statistical inference where robust results are especially important. Robust inference relies on imputation methods that capture not only the missing values but also the variability of the data. This ensures that the statistical conclusions drawn from the imputed datasets are reliable. Capturing the variability in the data is very important to make sure that the imputed datasets support valid statistical inferences. For example, by looking at confidence interval coverage, we can have an idea about how well the imputation captures the variability of the data which is especially important for drawing reliable conclusions. Failing to represent the variability can result in biased estimates, overly narrow confidence intervals and unreliable results. Therefore, assessing the inferential performance of VAEs can tell us more about their utility in research. While the advantages of VAEs in predictive tasks are well-documented, it is unknown whether their use yields valid inferences. To address this gap, I am using a simulation-based approach to evaluate the inferential performance of traditional and the new VAE imputation techniques under multiple missing data scenarios in my thesis. The thesis also aims to evaluate the performance of VAEs given the limitations they might have. 
+
+\section{Methods}
+
+To compare the performance of Variational Autoencoders with conventional imputation techniques on inferential tasks, we conduct a simulation study. The simulation-based approach evaluates the performance of Variational Autoencoders (VAEs) compared to Predictive Mean Matching (PMM) and single imputation. The main aim of my thesis is to systematically assess these methods’ ability to handle missing data under various conditions and maintain statistical validity, with a particular focus on inferential accuracy. 
+
+The simulation design includes different factors to try to mimic realistic data scenarios. I use various missing data mechanisms with varying proportion of missingness. In the thesis three imputation methods are used: variational autoencoders (VAEs), predictive mean matching (PMM) and single imputation (Mean). To implement the VAEs I use the Torch package in R. PMM is a conventional method that imputes missing values by selecting observed values with similar predicted outcomes and preserves distributional properties. Single imputation (mean) is a baseline method where missing values are replaced with the mean of the observed values. 
+
+\textbf{Data Generating Mechanism 
+}
+Synthetic datasets are generated using the mvrnorm function from the MASS package in R, which creates multivariate normal datasets with specified properties. For all the variables, the mean vector is zero (μ = 0). Each dataset has 500 observations and 50 variables. With these datasets we are more likely to be able to give a baseline for evaluating imputation methods in low and high-dimensional contexts. 
+
+\textbf{Missing Data Mechanism
+}
+I am going to implement two types of missing data mechanisms to introduce missingness into the datasets. First, Missing Completely at Random (MCAR) removes observed values randomly from the data, without reference to any other variables. Second, Missing at Random (MAR) where the missingness indicators are conditioned on the other variables, meaning that missingness is related to the observed data. The proportion of missing data varies across three levels: 10\%, 25\%, and 50\%. With these proportions we can evaluate robustness of the imputation methods under various levels of data missingness. Both the missingness mechanisms and the proportions are achieved by using the ampute function from the mice in R. Datasets are generated under predefined conditions, followed by the application of missing data mechanisms. For reliability, each imputation method is applied across 1,000 iterations. Then a linear regression model helps to evaluate the accuracy and reliability of the parameter estimates. These parameter estimates are regression coefficients, standard errors, bias and confidence interval coverage. We assess the bias to explore systematic deviations from the true parameter values. Confidence interval is evaluated to ensure that the data’s variability is accurately represented. These metrich allow for a comprehensive assessment of how well the regression model evaluates how well the imputed datasets let the estimation of key parameters like regression coefficients be estimated. 
+
+\textbf{Evaluation Metrics 
+}
+The performance of imputation methods is assessed using: Predictive Metrics: Root Mean Square Error (RMSE) of the prediction to measure how well missing values are estimated. Inferential Metrics: Bias, confidence interval coverage and standard error. Computational Feasibility: Runtime and convergence rates to assess the efficiency of each method.  
+
+\newpage
+
+\printbibliography[title=References]
+
+\begin{thebibliography}{99}
+
+\bibitem{Aspreti2020} Aspreti, F., \& Trentin, E. (2020). On the Kullback-Leibler divergence in variational autoencoders. \textit{Neural Networks, 126}, 1–12. \url{https://doi.org/10.1016/j.neunet.2020.03.004}
+
+\bibitem{Donders2006} Donders, A. R. T., van der Heijden, G. J., Stijnen, T., \& Moons, K. G. M. (2006). A gentle introduction to imputation of missing values. \textit{Journal of Clinical Epidemiology, 59}(10), 1087–1091. \url{https://doi.org/10.1016/j.jclinepi.2006.01.014}
+
+\bibitem{Enders2017} Enders, C. K. (2017). \textit{Applied missing data analysis} (2nd ed.). Guilford Press.
+
+\bibitem{Kingma2013} Kingma, D. P., \& Welling, M. (2013). Auto-encoding variational Bayes. \textit{arXiv Preprint}. \url{https://arxiv.org/abs/1312.6114}
+
+\bibitem{Laqueur2022} Laqueur, H. S., Lim, R. D., \& Cooley, A. J. (2022). Enhancing inference validity in machine learning: Addressing challenges in multiple imputation. \textit{Statistical Science, 37}(4), 596–611. \url{https://doi.org/10.1214/21-STS838}
+
+\bibitem{Little2019} Little, R. J. A., \& Rubin, D. B. (2019). \textit{Statistical analysis with missing data} (3rd ed.). Wiley.
+
+\bibitem{Ma2023} Ma, Y., Yang, J., \& Zheng, X. (2023). A review of deep learning approaches for missing data imputation. \textit{Neural Computing and Applications, 35}(2), 231–245. \url{https://doi.org/10.1007/s00521-023-07122-0}
+
+\bibitem{Matheus2024} Matheus, L. M., \& Krohling, R. A. (2024). Variational autoencoders for missing data imputation: A review. \textit{Expert Systems with Applications, 116}, 1–14. \url{https://doi.org/10.1016/j.eswa.2024.119385}
+
+\bibitem{McCoy2018} McCoy, T., Phipps, E., \& Smith, L. (2018). Imputation of missing data using variational autoencoders: Theory and practice. \textit{Machine Learning, 107}(7), 1115–1134. \url{https://doi.org/10.1007/s10994-018-5721-5}
+
+\bibitem{Meng1994} Meng, X. L. (1994). Multiple-imputation inferences with uncongenial sources of input. \textit{Statistical Science, 9}(4), 538–558. \url{https://doi.org/10.1214/ss/1177010269}
+
+\bibitem{Nakagawa2015} Nakagawa, S. (2015). Missing data: Mechanisms, methods, and messages. In G. A. Fox, S. Negrete Yankelevich, \& V. J. Sosa (Eds.), \textit{Ecological statistics: Contemporary theory and application} (pp. 81-105). Oxford University Press.
+
+\bibitem{Qui2020} Qui, J., Ding, Y., \& Zhang, S. (2020). A variational autoencoder framework for imputing missing data. \textit{GigaScience, 9}(8), 1–8. \url{https://doi.org/10.1093/gigascience/giaa082}
+
+\bibitem{Rubin1987} Rubin, D. B. (1987). \textit{Multiple imputation for nonresponse in surveys}. Wiley.
+
+\bibitem{Schafer2002} Schafer, J. L., \& Graham, J. W. (2002). Missing data: Our view of the state of the art. \textit{Psychological Methods, 7}(2), 147–177. \url{https://doi.org/10.1037/1082-989X.7.2.147}
+
+\bibitem{vanBuuren2018} van Buuren, S. (2018). \textit{Flexible imputation of missing data} (2nd ed.). Chapman and Hall/CRC.
+
+\bibitem{Yu2023} Yu, S., Zhang, Q., \& Lee, H. (2023). Missing data imputation for single-cell RNA-seq analysis: A comparative study. \textit{Nature Communications, 14}(1), 289. \url{https://doi.org/10.1038/s41467-023-29152-7}
+
+\end{thebibliography}
+
+
+\end{document}
